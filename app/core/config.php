@@ -50,7 +50,7 @@ class Config {
 		\helpers\session::init();
 
 		//set the default template
-		\helpers\session::set('template', 'default');
+		\helpers\session::set('template', 'dashboard');
 	}
 
 }

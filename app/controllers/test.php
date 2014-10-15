@@ -1,5 +1,6 @@
-<?php 
-namespace controllers;
+<?php
+
+ namespace controllers;
 use core\view as View;
 
 /*
@@ -9,7 +10,7 @@ use core\view as View;
  * @version 2.1
  * @date June 27, 2014
  */
-class Welcome extends \core\controller{
+class Test extends \core\controller{
 
 	/**
 	 * call the parent construct
@@ -22,7 +23,8 @@ class Welcome extends \core\controller{
 	 * define page title and load template files
 	 */
 	public function index(){
-		View::rendertemplate('index', $data);
+		View::rendertemplate('pagePrepare', $data);
+		View::render('test/test', $data);
+		View::rendertemplate('pageEnd', $data);
 	}
-
 }
