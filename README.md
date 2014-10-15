@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ![Simple MVC Framework](http://simplemvcframework.com/app/templates/smvcf/img/logo.png)
 
 #V2.1
@@ -34,3 +35,9 @@ Upload the framework files to your server. Normally the index.php file will be a
 
 For Sublime Text users, their is a new plugin for keyboard shortcuts see [https://github.com/simple-mvc-framework/SMVC-Snippets](https://github.com/simple-mvc-framework/SMVC-Snippets) for more details and install instructions.
 
+=======
+Framework
+=========
+
+Simple framework for the ebayreports.com
+>>>>>>> c82997a0faf63c8cf42abd12afe952cd7c024fc2
