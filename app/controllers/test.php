@@ -27,4 +27,9 @@ class Test extends \core\controller{
 		View::render('test/test', $data);
 		View::rendertemplate('pageEnd', $data);
 	}
+	public function test(){
+		$m = new \models\ebay\item();
+		echo $m->test();
+	        
+	}
 }
