@@ -1,6 +1,6 @@
 <?php
 
- namespace controllers;
+namespace controllers;
 use core\view as View;
 
 /*
@@ -28,8 +28,13 @@ class Test extends \core\controller{
 		View::rendertemplate('pageEnd', $data);
 	}
 	public function test(){
-		$m = new \models\ebay\item();
-		echo $m->test();
+//		echo "!";
+		echo \helpers\currency::convertTest();
 	        
+	}
+	public function shell(){
+		View::rendertemplate('pagePrepare', $data);
+		View::render('shell', $data);
+		View::rendertemplate('pageEnd', $data);	        
 	}
 }

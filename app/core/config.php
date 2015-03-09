@@ -22,6 +22,8 @@ class Config {
 		define('DEFAULT_CONTROLLER', 'welcome');
 		define('DEFAULT_METHOD' , 'index');
 
+		define('DEFAULT_PER_PAGE' , 50);		
+
 		//set a default language
 		define('LANGUAGE_CODE', 'en');
 
@@ -32,6 +34,7 @@ class Config {
 		define('DB_USER', 'framework');
 		define('DB_PASS', 'framework');
 		define('PREFIX', 'frame_');
+		define('THRESHOLD', 5);
 
 		//set prefix for sessions
 		define('SESSION_PREFIX', 'frame_');

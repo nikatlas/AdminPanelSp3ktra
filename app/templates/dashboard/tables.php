@@ -6,7 +6,7 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="viewport" content="width=device-width">        
-  <link rel="stylesheet" href="css/templatemo_main.css">
+  <link rel="stylesheet" href="<? echo \helpers\url::get_template_path();?>css/templatemo_main.css">
 </head>
 <body>
   <div id="main-wrapper">
@@ -446,8 +446,8 @@
       </footer>
     </div>
 </div>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/templatemo_script.js"></script>
+    <script src="<? echo \helpers\url::get_template_path();?>js/jquery.min.js"></script>
+    <script src="<? echo \helpers\url::get_template_path();?>js/bootstrap.min.js"></script>
+    <script src="<? echo \helpers\url::get_template_path();?>js/templatemo_script.js"></script>
   </body>
 </html>

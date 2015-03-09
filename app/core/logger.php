@@ -42,7 +42,7 @@ class Logger {
      $msg = "$message in $file on line $line";  
      
      if ( ($number !== E_NOTICE) && ($number < 2048) ) {  
-         self::errorMessage($msg);
+         self::errorMessage($msg , true);
          self::customErrorMsg();
      } 
 
@@ -86,7 +86,6 @@ class Logger {
     }
      
     file_put_contents($error_file, $log_message . $content);
-
     if($print_error === true){
        echo $log_message;
        exit;

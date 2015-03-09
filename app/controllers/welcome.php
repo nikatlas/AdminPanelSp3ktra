@@ -24,5 +24,8 @@ class Welcome extends \core\controller{
 	public function index(){
 		View::rendertemplate('index', $data);
 	}
+	public function tables(){
+		View::rendertemplate('tables', $data);
+	}
 
 }

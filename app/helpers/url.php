@@ -8,6 +8,37 @@
  */
 class Url {
 
+	public static function getPageURI(){
+		$pattern = "/\/ebay\/list\/[A-Za-z]+/";
+		$pattern2 = "/\/ebay\/list/";
+		$uri = $_SERVER['REQUEST_URI'];
+		if( preg_match($pattern,$uri,$matches)){
+			return $matches[0];
+		}
+		else if(  preg_match($pattern2,$uri,$matches) ){
+			return $matches[0]."/page";	
+		}
+		else{
+			return "/ebay/list/page";	
+		}
+	}
+
+	public static function getPage(){
+		$pattern = "/\/ebay\/list\/[A-Za-z]+\/[0-9]+/";
+		$pattern2 = "/\/ebay\/list/";
+		$uri = $_SERVER['REQUEST_URI'];
+		if( preg_match($pattern,$uri,$matches)){
+			$a = explode('/' , $matches[0]);
+			return ($a[(sizeof($a)-1)]);
+		}
+		else if(  preg_match($pattern2,$uri,$matches) ){
+			return 1;
+		}
+		else{
+			return 1;	
+		}
+	}	
+
 	/**
 	 * Redirect to chosen url
 	 * @param  string  $url      the url to redirect to
