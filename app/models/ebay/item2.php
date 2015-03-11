@@ -475,8 +475,6 @@ class Item extends \core\model {
 			//var_dump($resp);
 			
 			return false;
-		}else{
-			return 33;//33 for EBAY API LIMIT REACHED
 		}
 		$margins = new \models\margin();
 		$items = $resp->Item;
@@ -488,7 +486,7 @@ class Item extends \core\model {
 				$oldprice = $flag[0]->currentprice;
 				// NEW LINE
 				$name = $flag[0]->name;
-				if ( $oldprice == $item->CurrentPrice && name == $item->name){
+				if ( $oldprice == $item->CurrentPrice && name == $item->Name){
 					$oldflag = false;	
 				}
 				else{
@@ -500,7 +498,7 @@ class Item extends \core\model {
 						$changed = 0;
 					}
 					//NEED TO GET NEW NAME HERE !
-					if( $item->name != $name ){
+					if( $item->Name != $name ){
 						$alert = 1;
 					}
 				}
@@ -585,7 +583,7 @@ class Item extends \core\model {
 			if( !$flag ){return false;}
 			$flag = $this->checkCreateLocalItem($itemId);
 			if( $flag !== false ){
-				$oldprice = $flag[0]->currentprice;
+				$oldprice = $q[0]->currentprice; //TODO WHATS THIS q[0] ?
 			}
 			else{
 				$oldprice = 0;	
