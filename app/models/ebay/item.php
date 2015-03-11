@@ -484,7 +484,9 @@ class Item extends \core\model {
 			$flag = $this->checkCreateLocalItem($item->ItemID);
 			if( $flag != false && $flag[0]->pinned == 1){
 				$oldprice = $flag[0]->currentprice;
-				if ( $oldprice == $item->CurrentPrice ){
+				// NEW LINE
+				$name = $flag[0]->name;
+				if ( $oldprice == $item->CurrentPrice && name == $item->Name){
 					$oldflag = false;	
 				}
 				else{
@@ -494,6 +496,10 @@ class Item extends \core\model {
 					if( $item->CurrentPrice - $oldprice > $margins->getThreshold($oldprice) ){
 						$alert = 1;
 						$changed = 0;
+					}
+					//NEED TO GET NEW NAME HERE !
+					if( $item->Name != $name ){
+						$alert = 1;
 					}
 				}
 			}

@@ -145,6 +145,9 @@ class User extends \core\model {
 			'time_created' => date("Y-m-d H:i:s")		
 		);
 		$q = $this->_db->insert(PREFIX."users",$data);
+		if( !$q ){
+			return -1;
+		}
 		return 1;
 	}
 	private function checkCreateTable(){
