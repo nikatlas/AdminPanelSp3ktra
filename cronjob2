@@ -1,0 +1,30 @@
+*/15 * * * * curl http://5.9.119.101/cronny
+
+30 7 * * * curl http://5.9.119.101/cronny
+
+0 8 * * * curl http://5.9.119.101/cronny
+30 8 * * * curl http://5.9.119.101/cronny
+
+0 9 * * * curl http://5.9.119.101/cronny
+30 9 * * * curl http://5.9.119.101/cronny
+
+0 10 * * * curl http://5.9.119.101/cronny
+30 10 * * * curl http://5.9.119.101/cronny
+
+0 11 * * * curl http://5.9.119.101/cronny
+30 11 * * * curl http://5.9.119.101/cronny
+
+0 12 * * * curl http://5.9.119.101/cronny
+30 12 * * * curl http://5.9.119.101/cronny
+
+0 13 * * * curl http://5.9.119.101/cronny
+30 13 * * * curl http://5.9.119.101/cronny
+
+0 14 * * * curl http://5.9.119.101/cronny
+30 14 * * * curl http://5.9.119.101/cronny
+
+0 15 * * * curl http://5.9.119.101/cronny
+30 15 * * * curl http://5.9.119.101/cronny
+
+0 16 * * * curl http://5.9.119.101/cronny
+30 16 * * * curl http://5.9.119.101/cronny
