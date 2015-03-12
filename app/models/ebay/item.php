@@ -488,7 +488,7 @@ class Item extends \core\model {
 				$oldprice = $flag[0]->currentprice;
 				// NEW LINE
 				$name = $flag[0]->name;
-				if ( $oldprice == $item->CurrentPrice && name == $item->name){
+				if ( $oldprice == $item->CurrentPrice && name == $item->Name){
 					$oldflag = false;	
 				}
 				else{
@@ -500,8 +500,14 @@ class Item extends \core\model {
 						$changed = 0;
 					}
 					//NEED TO GET NEW NAME HERE !
-					if( $item->name != $name ){
+					if( $item->Name != $name ){
 						$alert = 1;
+						$postdata = array(
+							'user' => 1,
+							'productid'  => $flag[0]->productid,
+							'content' => "Name changed!!!"			
+						);
+						$qq = $this->_db->insert(PREFIX."notes" , $postdata);
 					}
 				}
 			}

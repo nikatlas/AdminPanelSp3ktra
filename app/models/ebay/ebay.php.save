@@ -391,7 +391,7 @@ class Ebay {
 			
 			$price = ($cp / ( 1 +   0.19 * intval($item->vat) ) + $sp + $item->weight + $item->profit + $item->insurancecost + 45*$item->big ) * ( 1.19 ) + $item->margin;// CHANGE 45 TODO
 			$r = $this->updatePrice( $item->itemid , $price , $item->currency , $session , $item->nquantity);
-			//echo $r."\r\n\r\n";
+if(
 		}		
 	}
 	public function updateListingPricesEnd($items , $endprice){
@@ -400,8 +400,7 @@ class Ebay {
 			$session = $mod->getByName($item->seller);
 			if( $session == false ) continue;
 			$price = $endprice + $item->margin;
-			$r = $this->updatePrice( $item->itemid , $price , $item->currency , $session);
-			//echo $r."\r\n\r\n";
+			$this->updatePrice( $item->itemid , $price , $item->currency , $session);
 		}		
 	}
 	public function updatePrice($itemid , $price , $currency ,  $userToken ,$quantity =NULL){

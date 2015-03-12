@@ -46,7 +46,7 @@ class Item extends \core\controller{
 	public function updatePrices($pid){
 		$mod = new \models\ebay\item();
 		$mod->updatePrices($pid);
-		\helpers\url::previous();
+		//\helpers\url::previous();
 	}
 	public function backToActive($id){
 		$mod = new \models\ebay\item();

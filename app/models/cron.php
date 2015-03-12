@@ -15,7 +15,7 @@ class Cron extends \core\model{
 			
 			$q = mysql_query("delete from `frame_products_local` WHERE productid is null");
         	        $q = mysql_query("delete from `frame_products_remote` WHERE productid is null");
-
+			
 			$q = $this->_db->select("SELECT * FROM ".PREFIX."products_remote WHERE itemid not in( SELECT itemid FROM ".PREFIX."products_local )");
 			$model = new \models\ebay\item();	
 			foreach( $q as $r ){
