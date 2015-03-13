@@ -216,6 +216,7 @@ class Package extends \core\model {
 		$k = explode( "," , $q[0]->packageids );
 		$packs = array();
 		foreach( $k as $itemid ){
+			if( $itemid == "" )continue;
 			$s = $this->_db->select("SELECT * FROM ".PREFIX."packages LEFT JOIN ".PREFIX."products_local ON ".PREFIX."products_local.itemid=:itemid WHERE ".PREFIX."packages.id = :id" , array(":id" => $id , ":itemid" => $itemid ));
 			$packs = array_merge($packs , $s);
 		}
@@ -230,13 +231,14 @@ class Package extends \core\model {
 		$k = explode( "," , $q[0]->localids );
 		$packs = array();
 		foreach( $k as $itemid ){
+			if( $itemid == "" )continue;
 			$s = $this->_db->select("SELECT * FROM ".PREFIX."packages LEFT JOIN ".PREFIX."products_local ON ".PREFIX."products_local.itemid=:itemid WHERE ".PREFIX."packages.id = :id" , array(":id" => $id , ":itemid" => $itemid ));
 			$packs = array_merge($packs , $s);
 		}
 		
 		$this->local = $packs;
 		$this->locals = sizeof($packs);
-		
+
 		return true;
 	}
 	public function getPackOnly($id){

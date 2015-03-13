@@ -488,7 +488,7 @@ class Item extends \core\model {
 				$oldprice = $flag[0]->currentprice;
 				// NEW LINE
 				$name = $flag[0]->name;
-				if ( $oldprice == $item->CurrentPrice && name == $item->Name){
+				if ( $oldprice == $item->CurrentPrice && name == $item->Title){ //Title on ebay api name on us! ebay->GetItemDATA switch this by itself
 					$oldflag = false;	
 				}
 				else{
@@ -500,7 +500,7 @@ class Item extends \core\model {
 						$changed = 0;
 					}
 					//NEED TO GET NEW NAME HERE !
-					if( $item->Name != $name ){
+					if( $item->Title != $name ){
 						$alert = 1;
 						$postdata = array(
 							'user' => 1,
