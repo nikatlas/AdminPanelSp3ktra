@@ -13,6 +13,7 @@ class Cron extends \core\model{
 			$con = mysql_connect(DB_HOST, DB_USER,  DB_PASS) or die("Unable to connect to MySQL");
 	                $sdb = mysql_select_db(DB_NAME);
 			
+			$q = mysql_query("delete from `frame_products_local` WHERE productid not in (SELECT id as productid FROM `".PREFIX."products`)");
 			$q = mysql_query("delete from `frame_products_local` WHERE productid is null");
         	        $q = mysql_query("delete from `frame_products_remote` WHERE productid is null");
 			

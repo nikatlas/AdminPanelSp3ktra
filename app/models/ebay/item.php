@@ -485,7 +485,8 @@ class Item extends \core\model {
 				$oldprice = $flag[0]->currentprice;
 				// NEW LINE
 				$name = $flag[0]->name;
-				if ( $oldprice == $item->CurrentPrice && name == $item->Title){ //Title on ebay api name on us! ebay->GetItemDATA switch this by itself
+				
+				if ( $oldprice == $item->CurrentPrice && $name == $item->Title){ //Title on ebay api name on us! ebay->GetItemDATA switch this by itself
 					$oldflag = false;	
 				}
 				else{
@@ -502,7 +503,8 @@ class Item extends \core\model {
 						$postdata = array(
 							'user' => 1,
 							'productid'  => $flag[0]->productid,
-							'content' => "Name changed!!!"			
+							'content' => "Name changed!!! OLDNAME:"+$name,
+							'name' => $item->Title 			
 						);
 						$qq = $this->_db->insert(PREFIX."notes" , $postdata);
 					}

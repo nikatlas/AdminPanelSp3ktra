@@ -353,13 +353,14 @@ class Package extends \core\model {
 		return $this->id;
 	}
 	public function addItem($itemId , $id ){
+		if( $itemId == '' ) return false;
 		$user = new \models\user\user();		
 		$q = $this->_db->select("SELECT * FROM ".PREFIX."products_remote WHERE itemid=:id" , array( ":id" => $itemId ) );
 		if( $q[0] == NULL ){		
 			$postdata = array(
 				'user' => $user->id,
 				'status'  => 'active',
-				'time_created'     => date("Y-m-d H:i:s")
+				'time_created' => date("Y-m-d H:i:s")
 			);
 			$q = $this->_db->insert(PREFIX."products" , $postdata);
 			$this->id = $this->_db->lastInsertId();

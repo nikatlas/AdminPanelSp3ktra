@@ -262,7 +262,7 @@ foreach ( (array)$data['item'] as $item ){
               <ul class="dropdown-menu" role="menu">
                 <li><a href="#">View other items</a></li>
                 <?php if( $data['alertPage'] || $data['status'] == "outofstock"){?><li><a href="javascript:backToActive(<?php echo $item->productid;?>);">Back to Active</a></li><?php }?>
-                <?php if( $data['status'] == "Completed" || true ){?><li><a href="javascript:outOfStock(<?php echo $item->productid;?>);">Send to Out Of Stock</a></li><?php }?>
+                <?php if( $data['status'] != "outofstock" ){?><li><a href="javascript:outOfStock(<?php echo $item->productid;?>);">Send to Out Of Stock</a></li><?php }?>
                 <li><a href="javascript:createNote(<?php echo $item->productid;?>);">Add Note</a></li>
                 <li><a href="javascript:deleteAllItem(<?php echo $item->productid;?>);">Delete</a></li>
               </ul>

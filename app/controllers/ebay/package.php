@@ -68,6 +68,7 @@ class Package extends \core\controller{
 	public function addItems($id){
 		$mod = new \models\ebay\package();
 		foreach ( (array)$_POST['itemid'] as $item ){
+			if( $item == '' )continue; 
 			$mod->addItem($item , $id);
 		}
 		$mod->getCurrent($id , true);
