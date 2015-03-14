@@ -412,7 +412,7 @@ class Item extends \core\model {
 			array_push($qqq , $item);
 		}		
 		$sss = $this->syncMultipleItemPrices($qqq , 0 , sizeof($qqq) );
-
+		return $sss;
 	}
 	
 	public function checkCreateLocalItem($itemId){
@@ -473,10 +473,7 @@ class Item extends \core\model {
 		else if ( $resp->Ack != "Success" ){
 			//exit( " ERROR ON API CALL :".var_dump($resp));
 			//var_dump($resp);
-			
-			return false;
-		}else{
-			return 33;//33 for EBAY API LIMIT REACHED
+			return 33; // Ebay Error maybe limit has been reached
 		}
 		$margins = new \models\margin();
 		$items = $resp->Item;
