@@ -609,7 +609,7 @@ class Item extends \core\model {
 			
 			$pnd = (($pinned)?'1':'0');
 			$rdata = array(
-				'currency' => $item->currency,//ITEM HERE IS FROM THE EBAY API!
+				'currency' => $item->currency,//ITEM HERE IS FROM THE EBAY API but manipulated from ebay.php getitemdata()!
 				'oldprice' => $oldprice,
 				'currentprice' => $item->price,
 				'shippingcost' => $item->shippingcost,
