@@ -292,6 +292,11 @@ max-width: 120px;max-height: 120px;border:1px solid #C7C7C7;
                             <input type="text" name="margin" value="<?php if($item->margin != 0) echo $item->margin;?>" placeholder="Custom Difference..." />
                             <input type="submit" value="Save" class="btn btn-primary" />
                         </form> 
+			<form action="/ebay/item/quantityChange" method="post" >
+                            <input type="hidden" name="qid" value="<?php echo $item->id;?>"/>
+                            <input type="text" name="nquantity" value="<?php if($item->nquantity != NULL) echo $item->nquantity;?>" placeholder="Change Quantity..." />
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </form>
                     <?php }?>
                 </td>
                 <td align="center">

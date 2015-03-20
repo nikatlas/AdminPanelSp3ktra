@@ -22,7 +22,7 @@ class Cron extends \core\model{
 			foreach( $q as $r ){
 				$model->syncItemId($r->itemid, false);
 			}
-			$q = $this->_db->select("SELECT * FROM ".PREFIX."products_local");
+			$q = $this->_db->select("SELECT * FROM ".PREFIX."products_local WHERE outofstock=0");
 
 			$pages = ceil( (sizeof( $q ) / $this->maxPerReq) );
 			for($i=0;$i < $pages;$i ++ ){

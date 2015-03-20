@@ -400,7 +400,7 @@ class Ebay {
 			$session = $mod->getByName($item->seller);
 			if( $session == false ) continue;
 			$price = $endprice + $item->margin;
-			$r = $this->updatePrice( $item->itemid , $price , $item->currency , $session);
+			$r = $this->updatePrice( $item->itemid , $price , $item->currency , $session , $item->nquantity);
 			//echo $r."\r\n\r\n";
 		}		
 	}

@@ -71,6 +71,7 @@ class Item extends \core\model {
 			return false;
 		}
 		$data = array(
+			'alert' => 0,
 			'outofstock' => 1
 		);
 		$where = array(
@@ -125,7 +126,7 @@ class Item extends \core\model {
 			$status ="";
 		}
 		////////
-		$q = $this->_db->select("SELECT *,COUNT(*) AS maniac FROM ".PREFIX."products INNER JOIN( SELECT * FROM ".PREFIX."products_local WHERE pinned = 1 AND listing LIKE :status AND outofstock=:out AND changed=:changed  AND name LIKE :title AND itemid LIKE :itemid AND seller LIKE :seller  ) b ON b.productid = ".PREFIX."products.id INNER JOIN ".PREFIX."users ON ".PREFIX."products.user=".PREFIX."users.id INNER JOIN ( SELECT productid,GROUP_CONCAT(seller ORDER BY pinned DESC SEPARATOR ',') AS listings,GROUP_CONCAT(itemid ORDER BY pinned DESC SEPARATOR ',') AS listingIds FROM ".PREFIX."products_local GROUP BY productid) c ON c.productid=".PREFIX."products.id  LEFT JOIN (SELECT productid AS csid,GROUP_CONCAT(id SEPARATOR ',' ) AS notes FROM ".PREFIX."notes GROUP BY productid ) d ON d.csid=".PREFIX."products.id WHERE user LIKE :user" , array(
+		$q = $this->_db->select("SELECT *,COUNT(*) AS maniac FROM ".PREFIX."products INNER JOIN( SELECT * FROM ".PREFIX."products_local WHERE pinned = 1 AND alert=0 AND listing LIKE :status AND outofstock=:out AND changed=:changed  AND name LIKE :title AND itemid LIKE :itemid AND seller LIKE :seller  ) b ON b.productid = ".PREFIX."products.id INNER JOIN ".PREFIX."users ON ".PREFIX."products.user=".PREFIX."users.id INNER JOIN ( SELECT productid,GROUP_CONCAT(seller ORDER BY pinned DESC SEPARATOR ',') AS listings,GROUP_CONCAT(itemid ORDER BY pinned DESC SEPARATOR ',') AS listingIds FROM ".PREFIX."products_local GROUP BY productid) c ON c.productid=".PREFIX."products.id  LEFT JOIN (SELECT productid AS csid,GROUP_CONCAT(id SEPARATOR ',' ) AS notes FROM ".PREFIX."notes GROUP BY productid ) d ON d.csid=".PREFIX."products.id WHERE user LIKE :user" , array(
 				":changed" => intval($changed),
 				":out"    => intval($out),
 				":status" =>'%'.$status,
@@ -477,34 +478,41 @@ class Item extends \core\model {
 		}
 		$margins = new \models\margin();
 		$items = $resp->Item;
+		
 		foreach( $items as $item ){
 			$changed = 0;
 			$alert = 0;
 			$flag = $this->checkCreateLocalItem($item->ItemID);
+			$name = $item->Title;
+
 			if( $flag != false && $flag[0]->pinned == 1){
-				$oldprice = $flag[0]->currentprice;
-				// NEW LINE
 				$name = $flag[0]->name;
-				
+				$oldprice = $flag[0]->currentprice;
+				// NEW LINE				
 				if ( $oldprice == $item->CurrentPrice && $name == $item->Title){ //Title on ebay api name on us! ebay->GetItemDATA switch this by itself
 					$oldflag = false;	
 				}
 				else{
+					//exit("NAME :" . $name . " TITLE :" .$item->Title);
 					$oldflag = true;
-					$changed = 1;
-					$alert = 0;
+					// We have a price change ? 
+					if( $oldprice != $item->CurrentPrice ){
+						$changed = 1;
+						$alert = 0;
+					}
+					// Is it an alert ?
 					if( $item->CurrentPrice - $oldprice > $margins->getThreshold($oldprice) ){
 						$alert = 1;
 						$changed = 0;
 					}
 					//NEED TO GET NEW NAME HERE !
-					if( $item->Title != $name ){
+					if( $flag[0]->name != NULL && $flag[0]->name != $name ){
 						$alert = 1;
+						$changed = 0;
 						$postdata = array(
 							'user' => 1,
 							'productid'  => $flag[0]->productid,
-							'content' => "Name changed!!! OLDNAME:"+$name,
-							'name' => $item->Title 			
+							'content' => "Name changed!!! OLDNAME:".$flag[0]->name
 						);
 						$qq = $this->_db->insert(PREFIX."notes" , $postdata);
 					}
@@ -513,13 +521,42 @@ class Item extends \core\model {
 			else{
 				$oldprice = 0;	
 			}
+		
+			// NEW LINE check lower prices
+			if( $flag[0]->pinned == 0 ){ // WE want to check only our products
+				$qs = $this->_db->select("SELECT * FROM ".PREFIX."products_local WHERE productid=:pid AND pinned=1", array('pid' => $flag[0]->productid) );
+				if( $qs[0] != NULL ){
+					$price = ($qs[0]->currentprice / ( 1 +   0.19 * intval($qs->vat) ) + $qs[0]->shippingcost + $qs[0]->weight + $qs[0]->profit + $qs[0]->insurancecost + 45*$qs[0]->big ) * ( 1.19 ) + $flag[0]->margin;
+					if( $item->CurrentPrice < $price ){
+						$postdata = array(
+							'user' => 1,
+							'productid'  => $flag[0]->productid,
+							'content' => "HEY PRICE IS TOO LOW!!! SHOULD BE MORE THAN : ".$price
+						);
+						$qq = $this->_db->insert(PREFIX."notes" , $postdata);
+						$data = array(
+							'recommendedprice' => $price
+						);
+						$where = array(
+							'productid' => $flag[0]->productid
+						);
+						//$this->_db->update(PREFIX."products_local" , $data , $where);
+					}
+				}
+				
+			}
+			//////////////////////////////////////////////
+
 			$data = array(
 				'currentprice' => $item->CurrentPrice,
 				'quantity' => $item->Quantity - $item->QuantitySold,
 				'listing' => $item->ListingStatus,
 				'timeleft' => $item->TimeLeft
 			);
-			if ( $item->Quantity- $item->QuantitySold == 0 ){
+			if ( $name != NULL && $name != '' ){
+				$data['name'] = $name;
+			}
+			if ( $item->Quantity - $item->QuantitySold == 0 ){
 				$alert = 1;
 				$data['listing'] = "Completed";	
 			}
@@ -533,7 +570,7 @@ class Item extends \core\model {
 					$data['changed'] = 0;
 			}
 			$where = array(
-				'itemid' => $item->ItemID,
+				'itemid' => $item->ItemID
 			);
 			$this->_db->update(PREFIX."products_local" , $data , $where);
 
@@ -595,7 +632,7 @@ class Item extends \core\model {
 			else{
 				$oldprice = 0;	
 			}
-				
+			
 			$rdata = array(
 				'lastsync' => date("Y-m-d H:i:s")
 			);

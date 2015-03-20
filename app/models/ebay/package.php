@@ -693,6 +693,35 @@ class Package extends \core\model {
 	}	
 	public function cron($id){
 		    $q = $this->_db->select("SELECT * FROM ".PREFIX."packages WHERE id=:id", array(":id"=> $id ) );
+		    if( $q != false ){
+			$k = explode( "," , $q[0]->packageids );
+			$r = array();
+			foreach( $k as $itemid ){
+				if( $itemid == "" )continue;
+				$s = $this->_db->select("SELECT * FROM ".PREFIX."products_local WHERE itemid = :id" , array(":id" => $itemid ));
+				if( !$s )continue;
+				array_push($r , $itemid);	
+			}
+
+			$k = explode( "," , $q[0]->localids );
+			$rr = array();
+			foreach( $k as $itemid ){
+				if( $itemid == "" )continue;
+				$s = $this->_db->select("SELECT * FROM ".PREFIX."products_local WHERE itemid = :id" , array(":id" => $itemid ));
+				if( !$s )continue;
+				array_push($rr , $itemid);	
+			}
+			$r = implode(',' ,$r);
+			$rr = implode(',' ,$rr);
+
+			$s = $this->_db->update(PREFIX."packages" , array(
+							"packageids" => $r,
+							"localids" => $rr
+							) , array("id"=>$id));	
+
+		    }	
+		    ///////////// ALL THE ABOVE IS NEW //////////////////////////
+		    $q = $this->_db->select("SELECT * FROM ".PREFIX."packages WHERE id=:id", array(":id"=> $id ) );
 			
 			$margins = new \models\margin();
 			foreach( (array)$q as $pack ){

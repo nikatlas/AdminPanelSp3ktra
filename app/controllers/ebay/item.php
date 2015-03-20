@@ -48,7 +48,8 @@ class Item extends \core\controller{
 		$r = $mod->updatePrices($pid);
 		if( $r == 33 )
 			exit("Error on this request! maybe LIMIT has been reached!");
-		\helpers\url::previous();
+		else
+			\helpers\url::previous();
 	}
 	public function backToActive($id){
 		$mod = new \models\ebay\item();
