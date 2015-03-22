@@ -527,26 +527,28 @@ class Item extends \core\model {
 				$qs = $this->_db->select("SELECT * FROM ".PREFIX."products_local WHERE productid=:pid AND pinned=1", array('pid' => $flag[0]->productid) );
 				if( $qs[0] != NULL ){
 					$price = ($qs[0]->currentprice / ( 1 +   0.19 * intval($qs->vat) ) + $qs[0]->shippingcost + $qs[0]->weight + $qs[0]->profit + $qs[0]->insurancecost + 45*$qs[0]->big ) * ( 1.19 ) + $flag[0]->margin;
-					if( $item->CurrentPrice < $price ){
-						$postdata = array(
-							'user' => 1,
-							'productid'  => $flag[0]->productid,
-							'content' => "HEY PRICE IS TOO LOW!!! SHOULD BE MORE THAN : ".$price
-						);
-						$qq = $this->_db->insert(PREFIX."notes" , $postdata);
-						$data = array(
-							'recommendedprice' => $price
-						);
-						$where = array(
-							'productid' => $flag[0]->productid
-						);
-						//$this->_db->update(PREFIX."products_local" , $data , $where);
+					if( $price > \helpers\currency::convert($item->CurrentPrice,$item->CurrentPrice->attributes()->currencyID , 'EUR') ){
+						$qn = $this->_db->select("SELECT * FROM ".PREFIX."notes WHERE productid=:pid AND content LIKE 'HEY PRICE%'" , array( 'pid' => $flag[0]->productid ) );
+						if( !$qn ){
+							$postdata = array(
+								'user' => 1,
+								'productid'  => $flag[0]->productid,
+								'content' => "HEY PRICE IS TOO LOW!!! SHOULD BE MORE THAN : ".$price
+							);
+							$qq = $this->_db->insert(PREFIX."notes" , $postdata);
+							$data = array(
+								'recommendedprice' => $price
+							);
+							$where = array(
+								'productid' => $flag[0]->productid
+							);
+							//$this->_db->update(PREFIX."products_local" , $data , $where);
+						}
 					}
 				}
 				
 			}
 			//////////////////////////////////////////////
-
 			$data = array(
 				'currentprice' => $item->CurrentPrice,
 				'quantity' => $item->Quantity - $item->QuantitySold,
