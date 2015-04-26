@@ -29,7 +29,9 @@ class Test extends \core\controller{
 	}
 	public function test(){
 //		echo "!";
-		echo \helpers\currency::convertTest();
+		$q = "<xml><CurrentPrice currencyID=\"GBG\">123</CurrentPrice></xml>";
+		$p = simplexml_load_file("test.xml");
+		echo $p->CurrentPrice->attributes()->currencyID;
 	        
 	}
 	public function shell(){

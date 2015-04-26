@@ -91,14 +91,18 @@ Router::any('ebay/account/update' , '\controllers\ebay\account@update');
 
 
 // EBAY MOD ROUTES
+Router::any('ebay/massiveUserChange' , '\controllers\ebay\item@massiveUserChange');
 Router::any('ebay/backtoactive/(:num)' , '\controllers\ebay\item@backToActive');
+Router::any('ebay/massivebacktoactive' , '\controllers\ebay\item@massiveBackToActive');
 Router::any('ebay/sendtooutofstock/(:num)' , '\controllers\ebay\item@sendToOutOfStock');
+Router::any('ebay/massivesendtooutofstock', '\controllers\ebay\item@massiveSendToOutOfStock');
 Router::any('ebay/list' , '\controllers\ebay\item@listing');
 Router::any('ebay/list/alerts' , '\controllers\ebay\item@alerts');
 Router::any('ebay/list/alerts/(:num)' , '\controllers\ebay\item@alerts');
 Router::any('ebay/list/(:any)' , '\controllers\ebay\item@listing');
 Router::any('ebay/list/(:any)/(:num)' , '\controllers\ebay\item@listing');
 Router::any('ebay/item' , '\controllers\ebay\item@index');
+Router::any('ebay/item/changeuser' , '\controllers\ebay\item@changeUser');
 Router::any('ebay/item/addnew' , '\controllers\ebay\item@addNew');
 Router::any('ebay/item/save' , '\controllers\ebay\item@save');
 Router::any('ebay/item/margin' , '\controllers\ebay\item@changeItemMargin');
@@ -144,6 +148,10 @@ Router::any('login' , '\controllers\user\user@login');
 Router::any('logout' , '\controllers\user\user@logout');
 
 Router::any('user/users' , '\controllers\user\user@users');
+
+// SHOW USAGE CUSTOM 
+Router::any('ebay/showUsage' , '\controllers\ebay\item@showUsage');
+
 
 //if no route found
 Router::error('\core\error@index');

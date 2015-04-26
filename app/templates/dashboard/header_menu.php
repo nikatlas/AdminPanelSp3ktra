@@ -56,7 +56,7 @@
   }
   .bmenu a div{
 	display: inline-block;
-	width: 145px;
+	width: 170px;
 	height: 30px;
 	background: rgba(66, 139, 202, 0.83);
 	margin: 0px -2px;

@@ -3,6 +3,20 @@ Items
 </h1>
 <div>
 <a href="/ebay/item/addnew" class="btn btn-primary" style="margin-bottom:2px; float: right;">Add new Item</a>
+<a href="javascript:massiveOutOfStock();" class="btn btn-primary" style="margin-bottom:2px; float: right;">Send to OutOfStock</a>
+<a href="javascript:massiveBackToActive();" class="btn btn-primary" style="margin-bottom:2px; float: right;">Send BackToActive</a>
+
+<?php 
+$currentUser = new \models\user\user();
+if( $currentUser->privs > 3 ) { ?>
+<a href="javascript:switchUsers();" class="btn btn-primary" style="float:right;margin-right:10px;" >Switch Users</a>
+<select name="user" id="newuserid" style="float:right;margin-right:10px;">
+                <option value=""> - </option>
+        <?php foreach( (array)$data['users'] as $tuser ){?>
+                <option value="<?php echo $tuser->id;?>"><?php echo $tuser->username;?></option>
+        <?php }?>
+</select>
+<?php } ?>
 </div>
 <p style="clear:both;"></p>
 <?php 
@@ -59,12 +73,34 @@ function backToActive(id){
 		  }
 		});
 }
+function massiveBackToActive(){
+	var pids = checkedProducts.join();
+		$.ajax({
+		  type: "POST",
+		  data: { ids : pids },
+		  url: '/ebay/massivebacktoactive/',
+		  success: function(){
+			window.location.href = window.location.href;
+		  }
+		});
+}
 function outOfStock(id){
 		$.ajax({
 		  type: "POST",
 		  url: '/ebay/sendtooutofstock/'+id,
 		  success: function(){
 			$("#line_"+id).hide(1000);  
+		  }
+		});
+}
+function massiveOutOfStock(){
+	var pids = checkedProducts.join();
+		$.ajax({
+		  type: "POST",
+		  data: { ids : pids },
+		  url: '/ebay/massivesendtooutofstock/',
+		  success: function(){
+			window.location.href = window.location.href;
 		  }
 		});
 }
@@ -124,6 +160,33 @@ function gotoURL(url){
 function gotoPage(url,pag){
 	var params = window.location.search;
 	window.location.href = url + pag + params;	
+}
+var checkedProducts = [];
+function checkProduct(id){
+
+	var a = checkedProducts.indexOf(id);
+	if( a >= 0 ){
+		checkedProducts.splice(a,1);
+	}
+	else{
+		checkedProducts.push(id);
+	}
+}
+function switchUsers(){
+var user = $("#newuserid")[0].value;
+if( user == "" ){
+	alert("Select a user!");
+	return;
+}	
+	var pids = checkedProducts.join();
+		$.ajax({
+		  type: "POST",
+		  url: '/ebay/massiveUserChange',
+		  data: { ids : pids , user: user},
+		  success: function(){
+			window.location.href = window.location.href;
+		  }
+		});	
 }
 </script>
 <div class="pagi">
@@ -195,7 +258,10 @@ foreach ( (array)$data['item'] as $item ){
 	if( $item->productid == "" )continue;
 ?>
 	<tr id="line_<?php echo $item->productid;?>">
-    	<td><?php echo ++$z;?></td>
+    	<td>
+	<?php echo ++$z;?><br>
+	<input type="checkbox" onchange="checkProduct(<?php echo $item->productid;?>)" />
+	</td>
     	<td><a href="/ebay/item/?id=<?php echo $item->productid;?>" class="bold"><img src="<?php echo $item->imgurl;?>" /></a></td>
     	<td>
 			<a target="_new" href="<?php echo $item->url;?>" class="bold"><?php echo $item->name;?></a>

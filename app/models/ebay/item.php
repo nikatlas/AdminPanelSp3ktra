@@ -12,6 +12,16 @@ class Item extends \core\model {
 		$user = new \models\user\user();
 		$this->setPin = false;
 	}
+	public function changeUser($user , $pid){
+		$data = array(
+                        'user' => $user
+                );
+                $where = array(
+                        'id' => $pid
+                );
+                $q = $this->_db->update(PREFIX."products" , $data , $where);		
+		return 0;
+	}
 	public function getUsername($productId){
 		$q = $this->_db->select("SELECT username FROM ".PREFIX."products INNER JOIN ".PREFIX."users ON ".PREFIX."users.id=".PREFIX."products.user  WHERE ".PREFIX."products.id=:id" , array( ":id" => $productId ) );
 		if( $q[0] == NULL ){
@@ -72,6 +82,7 @@ class Item extends \core\model {
 		}
 		$data = array(
 			'alert' => 0,
+			'changed' => 0,
 			'outofstock' => 1
 		);
 		$where = array(
@@ -399,6 +410,13 @@ class Item extends \core\model {
 		}
 		return ($q[0]->pinned==1);	
 	}
+	public function showUsage(){
+		global $appID,$devID,$certID,$RuName,$serverUrl, $userToken,$compatabilityLevel, $siteID;
+		initKeys();
+		session_start();
+	   	$ebay = new Ebay($appID,$devID,$certID,$RuName,$serverUrl, $userToken,$compatabilityLevel, $siteID);
+		return $ebay->GetApiAccessRules();
+	}
 	public function updatePrices($pid){
 		global $appID,$devID,$certID,$RuName,$serverUrl, $userToken,$compatabilityLevel, $siteID;
 		initKeys();
@@ -452,7 +470,7 @@ class Item extends \core\model {
 		// API request variables
 		$endpoint = 'http://open.api.ebay.com/shopping?';  // URL to call
 		$version = '837';  // API version supported by your application
-		$appid = 'IancuAnd-91a6-479a-a73a-e7377631f212';  // Replace with your own AppID
+		$appid = 'Spektram-7904-45e8-86d2-59e99f3dfa34';  // Replace with your own AppID
 		//if is evokt itemid change to 77
 		$globalid = '0';  // Global ID of the eBay site you want to search (e.g., EBAY-DE)		
 		// Construct the findItemsByKeywords HTTP GET call
@@ -484,6 +502,7 @@ class Item extends \core\model {
 			$alert = 0;
 			$flag = $this->checkCreateLocalItem($item->ItemID);
 			$name = $item->Title;
+			$reasonOnTotalPrice = false;			
 
 			if( $flag != false && $flag[0]->pinned == 1){
 				$name = $flag[0]->name;
@@ -504,9 +523,12 @@ class Item extends \core\model {
 					if( $item->CurrentPrice - $oldprice > $margins->getThreshold($oldprice) ){
 						$alert = 1;
 						$changed = 0;
+						// i m goin to log stuff on totalprice column on db 
+						$reasonOnTotalPrice = "1CurrentPrice:".$item->CurrentPrice." - OldPrice:".$oldprice." Margin:".$margins->getThreshold($oldprice);
 					}
 					//NEED TO GET NEW NAME HERE !
-					if( $flag[0]->name != NULL && $flag[0]->name != $name ){
+					if( $flag[0]->name != NULL && $flag[0]->name != $item->Title ){
+						$name = $item->Title;
 						$alert = 1;
 						$changed = 0;
 						$postdata = array(
@@ -526,8 +548,9 @@ class Item extends \core\model {
 			if( $flag[0]->pinned == 0 ){ // WE want to check only our products
 				$qs = $this->_db->select("SELECT * FROM ".PREFIX."products_local WHERE productid=:pid AND pinned=1", array('pid' => $flag[0]->productid) );
 				if( $qs[0] != NULL ){
-					$price = ($qs[0]->currentprice / ( 1 +   0.19 * intval($qs->vat) ) + $qs[0]->shippingcost + $qs[0]->weight + $qs[0]->profit + $qs[0]->insurancecost + 45*$qs[0]->big ) * ( 1.19 ) + $flag[0]->margin;
-					if( $price > \helpers\currency::convert($item->CurrentPrice,$item->CurrentPrice->attributes()->currencyID , 'EUR') ){
+					$price = ($qs[0]->currentprice / ( 1 +   0.19 * intval($qs[0]->vat) ) + $qs[0]->shippingcost + $qs[0]->weight + $qs[0]->profit + $qs[0]->insurancecost + 45*$qs[0]->big ) * ( 1.19 ) + $flag[0]->margin;
+					if( $price > \helpers\currency::convert($item->CurrentPrice, $item->CurrentPrice->attributes()->currencyID, 'EUR') + $margins->getThreshold($price) ){
+						$reasonOnTotalPrice = "2Price:".$price." ConvertedItem:". \helpers\currency::convert($item->CurrentPrice, $item->CurrentPrice->attributes()->currencyID, 'EUR')." CurrentPrice:".$item->CurrentPrice." Currency:".$item->CurrentPrice->attributes()->currencyID;
 						$qn = $this->_db->select("SELECT * FROM ".PREFIX."notes WHERE productid=:pid AND content LIKE 'HEY PRICE%'" , array( 'pid' => $flag[0]->productid ) );
 						if( !$qn ){
 							$postdata = array(
@@ -536,14 +559,18 @@ class Item extends \core\model {
 								'content' => "HEY PRICE IS TOO LOW!!! SHOULD BE MORE THAN : ".$price
 							);
 							$qq = $this->_db->insert(PREFIX."notes" , $postdata);
-							$data = array(
-								'recommendedprice' => $price
-							);
-							$where = array(
-								'productid' => $flag[0]->productid
-							);
-							//$this->_db->update(PREFIX."products_local" , $data , $where);
+							//Setup an alert
+							
 						}
+						$data = array(
+							'alert' => 1,
+							'totalprice' => $reasonOnTotalPrice,
+							'recommendedprice' => "CHANGE:".$price
+						);
+						$where = array(
+							'productid' => $flag[0]->productid
+						);
+						$this->_db->update(PREFIX."products_local" , $data , $where);
 					}
 				}
 				
@@ -567,8 +594,12 @@ class Item extends \core\model {
 				$data['alert'] = $alert;	
 				$data['changed'] = $changed;
 			}
+			// Passing data to DB FROM ABOVE 
+			if( $reasonOnTotalPrice ){
+				$data['totalprice'] = $reasonOnTotalPrice;
+			}
 			if( $item->ListingStatus == "Completed" ){
-					$data['alert'] = 0;	
+					$data['alert'] = 0;
 					$data['changed'] = 0;
 			}
 			$where = array(

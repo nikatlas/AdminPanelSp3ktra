@@ -24,6 +24,7 @@ class Item extends \core\controller{
 
 		
 		$data['notes'] = $mod->getNotes($_GET['id']);
+		$data['users'] = $user->getAll();
 		
 		View::rendertemplate('pagePrepare', $data);
 		View::render('ebay/item',$data);
@@ -51,13 +52,38 @@ class Item extends \core\controller{
 		else
 			\helpers\url::previous();
 	}
+	public function showUsage(){
+		$mod = new \models\ebay\item();
+		$r = $mod->showUsage();
+		echo $r;
+	}
 	public function backToActive($id){
 		$mod = new \models\ebay\item();
 		$mod->restore($id);
 	}
+	public function massiveBackToActive(){
+		$user = new \models\user\user();
+		$mod = new \models\ebay\item();
+                if( isset($_REQUEST['ids']) ){
+                        $ids = explode( ',',$_REQUEST['ids']);
+                        foreach($ids as $id){
+                                $mod->restore($id);
+                        }
+ 		}               
+	}
 	public function sendToOutOfStock($id){
 		$mod = new \models\ebay\item();
 		$mod->outofstock($id);
+	}
+	public function massiveSendToOutOfStock(){
+		$user = new \models\user\user();
+		$mod = new \models\ebay\item();
+                if( isset($_REQUEST['ids']) ){
+                        $ids = explode( ',',$_REQUEST['ids']);
+                        foreach($ids as $id){
+                                $mod->outofstock($id);
+                        }
+ 		}               
 	}
 	public function listing($status="",$page=1){
 		if( $status == "page" )$status = "";
@@ -183,5 +209,33 @@ class Item extends \core\controller{
 		}
 		\helpers\url::redirect("ebay/item?id=".$_REQUEST['id']);
 	}
-	
+	public function massiveUserChange(){
+		$ids = $_REQUEST['ids'];
+		$ids = explode(",",$ids);
+		foreach( $ids as $id ){
+			$this->changeUserFunc($id);
+		}
+	}
+	public function changeUserFunc($id){
+		$mod = new \models\ebay\item();
+		if ( !$mod->get($id) ){
+			return -1;
+                }
+		else{
+			if( isset($_REQUEST['user']) && $_REQUEST['user'] != "" )
+				$mod->changeUser($_REQUEST['user'],$id);
+		}
+	}	
+	public function changeUser(){
+		$mod = new \models\ebay\item();
+
+		if ( !$mod->get($_REQUEST['id']) ){
+                        $data['error'] = 1;
+                }
+		else{
+			if( isset($_REQUEST['user'])  && $_REQUEST['user'] != "" )
+				$mod->changeUser($_REQUEST['user'],$_REQUEST['id']);
+		}
+		\helpers\url::previous();
+	}	
 }

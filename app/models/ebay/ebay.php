@@ -207,10 +207,10 @@ class Ebay {
 				}				
 				return false;
 			 }
-			 
+
 
 			 $item = new obj();
-			 		 
+
 			 $item->sku = $doc->getElementsByTagName("SKU")->item(0)->nodeValue;
 
 			 $item->price = $doc->getElementsByTagName("CurrentPrice")->item(0)->nodeValue;
@@ -223,14 +223,14 @@ class Ebay {
 
 
 			 $item->timeleft = $doc->getElementsByTagName("TimeLeft")->item(0)->nodeValue;
-			 $item->endtime = $doc->getElementsByTagName("EndTime")->item(0)->nodeValue;			 
+			 $item->endtime = $doc->getElementsByTagName("EndTime")->item(0)->nodeValue;
 
 			 $item->imgurl = $doc->getElementsByTagName('PictureURL')->item(0)->nodeValue;
 
 			 $item->storeurl = $doc->getElementsByTagName('StoreURL')->item(0)->nodeValue;
-			 
+
 			 $item->url = $doc->getElementsByTagName("ViewItemURL")->item(0)->nodeValue;
-			 
+
 			 $item->listingStatus = $doc->getElementsByTagName("ListingStatus")->item(0)->nodeValue;
 			 $item->seller = $doc->getElementsByTagName('UserID')->item(0)->nodeValue;
 			 $item->itemid = $itemId;
@@ -238,7 +238,7 @@ class Ebay {
 			 global $appID,$siteID;			 
 			 //$query2 ='http://open.api.ebay.com/shopping?callname=GetShippingCosts&responseencoding=XML&appid='.$appid.'&siteid='.$globalid.'&version='.$version.'&ItemID='.$itemid.'&DestinationCountryCode=DE';
 			 $query2 ='http://open.api.ebay.com/shopping?callname=GetShippingCosts&responseencoding=XML&appid='.$appID.'&siteid='.$siteID.'&version=889&ItemID='.$itemId.'&DestinationCountryCode=DE';
-             $resp = simplexml_load_file($query2);
+			 $resp = simplexml_load_file($query2);
 			 
 			 $item->shippingcost = $resp->ShippingCostSummary->ListedShippingServiceCost;
 			 
@@ -391,7 +391,7 @@ class Ebay {
 			
 			$price = ($cp / ( 1 +   0.19 * intval($item->vat) ) + $sp + $item->weight + $item->profit + $item->insurancecost + 45*$item->big ) * ( 1.19 ) + $item->margin;// CHANGE 45 TODO
 			$r = $this->updatePrice( $item->itemid , $price , $item->currency , $session , $item->nquantity);
-			//echo $r."\r\n\r\n";
+			echo $r."\r\n\r\n";
 		}		
 	}
 	public function updateListingPricesEnd($items , $endprice){
@@ -428,8 +428,7 @@ class Ebay {
 			$responseXml = $session->sendHttpRequest($requestXmlBody);
 			return $responseXml;
 	}
-	
-	
+
     /**
      * Get my ebay selling details
      * 
@@ -463,7 +462,7 @@ class Ebay {
             return $responseXml;
 
     }	
-	
+
     /**
      * Get my ebay selling details
      * 
@@ -564,7 +563,7 @@ class Ebay {
 			
             //Create a new \eBay session with all details pulled in from included keys.php
             $responseXml = $session->sendHttpRequest($requestXmlBody);
-//            echo $responseXml;
+//          echo $responseXml;
             return $responseXml;
 
     }    
@@ -702,6 +701,33 @@ class Ebay {
                     ) ;
 		}// CLOSE OF FETCHING
     }
+
+
+
+    /**
+     * GetAPIAccess
+     * 
+     * @author nikatlas
+     * @date 1-Apr-2015
+     * @param type
+     * @return type xml
+     */
+    public function GetAPIAccessRules()
+    {
+        $session = new \eBaySession('GetAPIAccessRules',$this);
+        $requestXmlBody = '<?xml version="1.0" encoding="utf-8"?>
+				<GetApiAccessRulesRequest xmlns="urn:ebay:apis:eBLBaseComponents">
+				  <!-- (No call-specific Input fields) -->
+                                <RequesterCredentials>
+                                <eBayAuthToken>'.$this->userToken.'</eBayAuthToken>
+                                </RequesterCredentials>
+				</GetApiAccessRulesRequest>';
+	//Create a new eBay session with all details pulled in from included keys.php
+	$responseXml = $session->sendHttpRequest($requestXmlBody);
+        
+        return $responseXml;
+    }
+
 
 }
 ?>

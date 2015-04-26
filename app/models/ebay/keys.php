@@ -7,18 +7,22 @@ function initKeys(){
     // these keys can be obtained by registering at http://developer.ebay.com
     $production         = true;   // toggle to true if going against production
     $compatabilityLevel = 893;    // eBay API version
-	$siteID = 77; // 0 = US
+    $siteID = 77; // 0 = US
     if ($production) {
-        $devID = 'f2a7f4ed-c06f-494d-bc2e-af34346a2705';   // these prod keys are different from sandbox keys
-        $appID = 'SpektraM-a390-4335-825a-25770418f312';
+        //$devID = 'f2a7f4ed-c06f-494d-bc2e-af34346a2705';   // these prod keys are different from sandbox keys
+        //$appID = 'SpektraM-a390-4335-825a-25770418f312';
+        //$certID = '3de3717a-9916-44c2-9af2-e7ee936d7e65';
+        $devID = 'a14f1686-adff-4a77-983c-4033eb73dd51';   // these prod keys are different from sandbox keys
+        $appID = 'Spektram-7904-45e8-86d2-59e99f3dfa34';
 		//$appID = 'IancuAnd-91a6-479a-a73a-e7377631f212';
+        $certID = '4c288848-276d-4c5c-bb07-a5bc6fabd60b';
 		
-        $certID = '3de3717a-9916-44c2-9af2-e7ee936d7e65';
         $RuName = 'SpektraMaxima-SpektraM-a390-4-ydzzsn';
         //set the Server to use (Sandbox or Production)
         $serverUrl = 'https://api.ebay.com/ws/api.dll';      // server URL different for prod and sandbox
         //the token representing the eBay user to assign the call with
-        $userToken = 'AgAAAA**AQAAAA**aAAAAA**VZwSVA**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkIKoAZSDowmdj6x9nY+seQ**Y3UCAA**AAMAAA**flSxt4gPiIoMrwbji72ZDwkYjI7K1MMgsg0VtC/UbZ5Gw/q9VwiNd9hJK1LSkSz2nJ42n0CS3qV0rz1IS4Rso8xuwN/eOCkbXArPIDIO3FdslAyNfJxAu4eLZQpHWWoVQP7w26Bss+B2H1T1aLNd8I4ZQt8X9VFEoLfpsNSQ/mk9O0ZK5hod/T5tucHMyJbja7BkFWLg9qU269r9CaGmhfAq5NxFDnG7on6j+sNRa06EhgoWv+tHcNxzx4cCrQs++ZVuVXsKkTQv4BdDY4jEL3w7GeJCGXUiev/NYPTCtx84/DiChqMCxWvLhCTjLLHwbHajY+p5yHnX5IbnTKmI+73Amzj84gWPh+YFc5FVSPIKUMGlE6UGHdEuyeQECkdNnATakL0jy9bBngPT+w5f99VAFL41XEFeNKBk3NLpxftunsVnUklIO9CmDQThbwyPR+i3reh+2UgVE1LuclY4de8LCPDWKckOh1nWbZrIuwK5kCgjJvnF3Hzs9iJHUt7+1NFhSjgB7Cmk9+vBoCWFpPCZtdruePzkU3K/VB3s1OWMtlkCjtkeEXlrZRGTvm4fRE+Ch6WAX1Hys7uY1ZXe+nTt1egOr7Zk7MpxxZSlslzSRCX1ZsX3wrCsjsESFETZEMZjjROby4U9vTqwuEvm0mJ9HCr94k2+7doxo+/vZe6hc7IfUoy3If8rlEzckC3dhe+untDtl+QTg84N2jOqJoysiGoN0wEDGorQO4MxNKnDfL/1W2Wx3TYBquHi6ZQc';
+        //$userToken = 'AgAAAA**AQAAAA**aAAAAA**VZwSVA**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6AFkIKoAZSDowmdj6x9nY+seQ**Y3UCAA**AAMAAA**flSxt4gPiIoMrwbji72ZDwkYjI7K1MMgsg0VtC/UbZ5Gw/q9VwiNd9hJK1LSkSz2nJ42n0CS3qV0rz1IS4Rso8xuwN/eOCkbXArPIDIO3FdslAyNfJxAu4eLZQpHWWoVQP7w26Bss+B2H1T1aLNd8I4ZQt8X9VFEoLfpsNSQ/mk9O0ZK5hod/T5tucHMyJbja7BkFWLg9qU269r9CaGmhfAq5NxFDnG7on6j+sNRa06EhgoWv+tHcNxzx4cCrQs++ZVuVXsKkTQv4BdDY4jEL3w7GeJCGXUiev/NYPTCtx84/DiChqMCxWvLhCTjLLHwbHajY+p5yHnX5IbnTKmI+73Amzj84gWPh+YFc5FVSPIKUMGlE6UGHdEuyeQECkdNnATakL0jy9bBngPT+w5f99VAFL41XEFeNKBk3NLpxftunsVnUklIO9CmDQThbwyPR+i3reh+2UgVE1LuclY4de8LCPDWKckOh1nWbZrIuwK5kCgjJvnF3Hzs9iJHUt7+1NFhSjgB7Cmk9+vBoCWFpPCZtdruePzkU3K/VB3s1OWMtlkCjtkeEXlrZRGTvm4fRE+Ch6WAX1Hys7uY1ZXe+nTt1egOr7Zk7MpxxZSlslzSRCX1ZsX3wrCsjsESFETZEMZjjROby4U9vTqwuEvm0mJ9HCr94k2+7doxo+/vZe6hc7IfUoy3If8rlEzckC3dhe+untDtl+QTg84N2jOqJoysiGoN0wEDGorQO4MxNKnDfL/1W2Wx3TYBquHi6ZQc';
+        $userToken = 'AgAAAA**AQAAAA**aAAAAA**IiMlVQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wAk4ukDJiCqQudj6x9nY+seQ**VP4BAA**AAMAAA**YAidepyWshtHNfxSqtLOqeaybCCtZwoKG2hB+KKvBFpRCLphB/ArI8hPD/hUygKbQUw5BkjL/l0DUKb2I8kE0xl0Jg/zuQ+sRtEInferS+d9841S6/CaR6VRAgHXb0gQoK0GHf3RGW4yMzhHKOtmpPVZruBkRh/w3k3bmxr5pRu9F4V8fTNFoqQ05lNooC+U8AHlfav4U9WBGN6p1jbbN/j8ASzOTeo6IV3SDnj5hp1I4zZXdp8R0U3hqQF1GYNywJLhnTAsjw3Kvf1VHXXqiDZQLu5Xe/kSSasSRvAsEBkFePN43NXlildj2DSnKixVcD0AUQTxodlstTREePa2gfVaEhg+qT5LDgq7qlYLFtTO6nwmNbhcBk1Ffe4Pnh1dp+L2XpN2b6kbq3Os2DsyDpR7j256r21+vLNn4+aWZEL+w5efGvqWuECQOHHv20e9ppk4Dt4PwlbJ8zCd9SUv4C7mcaSeiOdZE91WrOoTgIG4U3AIbhqGlb07Zxte5tKrKyCdjbv7H/yA0LKJkJuRe4NmT777drZb4rAPyyOje8u67y/R/bE5cG0J/pdJykvs86aNHocqaO8tV/4onW7XbZJGspuhi00kSaEN+/8T0ff5EzJTdiCkvJjJz6GCBWk2TAQ2cC2R3Wq1nuzPyevwgnXcXqAKUOTL0yV2w7P5YUeyHS60er71preJS5C/us52QCvYpPNMeAQ3tl6VLcp9ARla9XPgGozMpyUByxpk9zDg8Od0iRUAsCWHCkIxq3cN';
     } else {
         // sandbox (test) environment
         $devID = 'f2a7f4ed-c06f-494d-bc2e-af34346a2705';   // these prod keys are different from sandbox keys

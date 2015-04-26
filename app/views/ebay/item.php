@@ -330,6 +330,20 @@ max-width: 120px;max-height: 120px;border:1px solid #C7C7C7;
 </form>
 <a href="/notes/add/<?php echo $_GET['id'];?>"  style="float:left" class="btn btn-primary" >Add note</a>
 <a href="/ebay/revise/<?php echo $_GET['id'];?>"  style="float:left" class="btn btn-primary" >Revise Prices</a>
-<a href="/ebay/packages?itemid=<?php echo $pndid;?>"  style="float:left" class="btn btn-primary" >Packages<span class="badge pull-right" style="position:relative;top:2px;"> <?php $p = new \models\ebay\package(); echo $p->countPackagesForItem($pndid);?></span></a>
-
+<a href="/ebay/packages?itemid=<?php echo $pndid;?>"  style="float:left;width:100px;" class="btn btn-primary" >
+	<div>Packs<span class="badge pull-right" style="position:relative;top:2px;"> <?php $p = new \models\ebay\package(); echo $p->countPackagesForItem($pndid);?></span></div>
+</a>
+<?php $currentUser = new \models\user\user(); ?>
+<?php if( $currentUser->privs > 3 ){?>
+<form action="/ebay/item/changeuser" method="POST">
+<input type="hidden" name="id" value="<?php echo $_GET['id'];?>"/>
+<select name="user">
+        	<option value=""> - </option>
+	<?php foreach( (array)$data['users'] as $user ){?>
+	       	<option value="<?php echo $user->id;?>"><?php echo $user->username;?></option>
+	<?php }?>
+</select>
+<input type="submit" value='Change User' class="btn btn-primary"/>
+</form>
+<?php }?>
 <?php }?>

@@ -54,8 +54,13 @@ class eBaySession
 	public function sendHttpRequest($requestBody)
 	{
 		//echo "+{".$this->verb."}";
+
 		//build eBay headers using variables passed via constructor
 		$headers = $this->buildEbayHeaders();
+
+		//Show headers to ensure appID
+		var_dump($headers);
+
 		//initialise a CURL session
 		$connection = curl_init();
 		//set the server we are using (could be Sandbox or Production server)
@@ -117,6 +122,7 @@ class eBaySession
 			//SiteID Indicates the eBay site to associate the call with
 			'X-EBAY-API-SITEID: ' . $this->siteID
 		);
+		echo $this->appID;
 		return $headers;
 	}
 }
