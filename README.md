@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-![Simple MVC Framework](http://simplemvcframework.com/app/templates/smvcf/img/logo.png)
+
 
 #V2.1
 #What is Simple MVC Framework?
